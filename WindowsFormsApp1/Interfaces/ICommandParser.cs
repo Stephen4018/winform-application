@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,10 @@ namespace WindowsFormsApp1
         void LoadCommandFromFile(string fileName);
         void SaveCommandToFile(string fileName);
 
-        void DrawCire(int radius);
-        void DrawRectangle(int width, int height);
-        void DrawTriangle(int side1, int side2);
-        void Clear();
+        void DrawCire(Graphics graphics, Point center, int radius);
+        void DrawRectangle(Graphics graphics, Rectangle rectangle);
+        void DrawTriangle(Graphics graphics, Point point1, Point point2, Point point3);
+        void Clear(Graphics graphics);
         void Reset();
         void MoveToPosition(int x, int y);
         void DrawToPosition(int x, int y);

@@ -11,21 +11,21 @@ namespace WindowsFormsApp1.Implementation
     public class CommandParser :  ICommandParser
     {
 
-        private Graphics graphics;
-        private PictureBox pictureBox1;
+        private Graphics _graphics;
+        //private PictureBox pictureBox1;
         private Pen pen;
         public Pen Pen { get { return pen; } }
 
+        // constructor
         public CommandParser()
         {
-            pictureBox1 = new PictureBox();
-            graphics = pictureBox1.CreateGraphics();
+            //pictureBox1 = new PictureBox();
             pen = new Pen(Color.Black);
         }
 
 
 
-        public void Clear()
+        public void Clear(Graphics graphics)
         {
             graphics.Clear(Color.Transparent);
         }
@@ -82,5 +82,22 @@ namespace WindowsFormsApp1.Implementation
         {
             throw new NotImplementedException();
         }
+
+        public void DrawCire(Graphics graphics, Point center, int radius)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawRectangle(Graphics graphics, Rectangle rectangle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawTriangle(Graphics graphics, Point point1, Point point2, Point point3)
+        {
+            throw new NotImplementedException();
+        }
+
+    
     }
 }
