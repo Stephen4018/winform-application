@@ -74,17 +74,38 @@ namespace WindowsFormsApp1.Implementation
 
         public void DrawCire(Graphics graphics, Point center, int radius)
         {
-            
+            if(fillshapes)
+            {
+                graphics.FillEllipse(new SolidBrush(pen.Color), center.X - radius, center.Y - radius, 2 * radius, 2 * radius);
+            }
+            else
+            {
+                graphics.DrawEllipse(pen, center.X - radius, center.Y - radius, 2 * radius, 2 * radius);
+            }
         }
 
         public void DrawRectangle(Graphics graphics, Rectangle rectangle)
         {
-            throw new NotImplementedException();
+            if (fillshapes)
+            {
+                graphics.FillRectangle(new SolidBrush(pen.Color), 10, 10, rectangle.Width, rectangle.Height );
+            }
+            else
+            {
+                graphics.DrawRectangle(pen, 10, 10, rectangle.Width, rectangle.Height);
+            }
         }
 
         public void DrawTriangle(Graphics graphics, Point point1, Point point2, Point point3)
         {
-            throw new NotImplementedException();
+            if(fillshapes)
+            {
+                graphics.FillPolygon(new SolidBrush(pen.Color), new Point[] { point1, point2, point3 });
+            }
+            else
+            {
+                graphics.DrawPolygon(pen, new Point[] { point1, point2, point3 });
+            }
         }
 
     
