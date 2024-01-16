@@ -10,9 +10,8 @@ namespace WindowsFormsApp1.Implementation
 {
     public class CommandParser :  ICommandParser
     {
-
+        private bool fillshapes;
         private Graphics _graphics;
-        //private PictureBox pictureBox1;
         private Pen pen;
         public Pen Pen { get { return pen; } }
 
@@ -36,16 +35,10 @@ namespace WindowsFormsApp1.Implementation
             {
                 Pen.Color = Color.FromKnownColor(knowncolor);
             }
-        }
-
-        public void DrawCire(int radius)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DrawRectangle(int width, int height)
-        {
-            throw new NotImplementedException();
+            else
+            {
+                throw new ArgumentException("Invalid color name");
+            }
         }
 
         public void DrawToPosition(int x, int y)
@@ -53,12 +46,7 @@ namespace WindowsFormsApp1.Implementation
             throw new NotImplementedException();
         }
 
-        public void DrawTriangle(int side1, int side2)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void FillApply(string toggle)
+        public void FillApply(bool toggle)
         {
             throw new NotImplementedException();
         }
@@ -85,7 +73,7 @@ namespace WindowsFormsApp1.Implementation
 
         public void DrawCire(Graphics graphics, Point center, int radius)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void DrawRectangle(Graphics graphics, Rectangle rectangle)
