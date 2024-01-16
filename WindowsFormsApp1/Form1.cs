@@ -15,6 +15,7 @@ using System.Drawing.Text;
 using System.CodeDom;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
+using WindowsFormsApp1;
 
 
 namespace WindowsFormApp1
@@ -24,7 +25,7 @@ namespace WindowsFormApp1
     {
         public Action buttonClickAction;
         private PaintEventHandler pictureBox1_Paint;
-        private SyntaxChecker syntaxChecker; // Add a syntax checker
+        private HelperClass helperClass;
         private MenuStrip menuStrip1;
         private Pen pen; //declare the pen
         private Pen blackPen; // set pen color to black
@@ -38,6 +39,35 @@ namespace WindowsFormApp1
         private bool fillShapes;
         //private Graphics graphics;
         //private bool errorDisplayed;
+
+        // Constructor
+        public Form1()
+        {
+            InitializeComponent();
+            this.Load += Form1_Load;
+            blackPen = new Pen(Color.Black);
+            pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox1_Paint);
+            button1.Click += new System.EventHandler(this.button1_Click);
+            penPosition = new Point(10, 10); //the initial position of the pen
+            pen = blackPen;// the initial color of the pen
+            textBox1.KeyPress += new KeyPressEventHandler(textBox1_KeyPress);
+            loadToolStripMenuItem = new ToolStripMenuItem("Load");
+            saveToolStripMenuItem = new ToolStripMenuItem("Save");
+            loadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
+            saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            menuStrip1 = new MenuStrip();
+            this.MainMenuStrip = menuStrip1;
+            this.Controls.Add(menuStrip1);
+            menuStrip1.Items.Add(loadToolStripMenuItem);
+            menuStrip1.Items.Add(saveToolStripMenuItem);
+            this.Controls.Add(this.pictureBox1);
+            //  graphics = Graphics.FromImage(drawingArea);
+            drawingArea = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            graphics = pictureBox1.CreateGraphics();
+            helperClass = new HelperClass();
+            Syntax.Click += new System.EventHandler(this.Syntax_Click);
+            button1.Click += new System.EventHandler(this.button1_Click);
+        }
 
         private void LoadFromFile(string fileName)
         {
@@ -111,14 +141,14 @@ namespace WindowsFormApp1
         {
             try
             {
-                syntaxChecker.CheckSyntax(command); //check the syntax of the command
+                helperClass.ValidateSyntax(command);
                 string[] input = command.Split(' ');
-                buttonClickAction?.Invoke();
+                //buttonClickAction?.Invoke();
             }
             catch (ArgumentException ex)
             {
                 MessageBox.Show(ex.Message, "Syntax Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //throw ex;
+                
             }
         }
 
@@ -133,50 +163,22 @@ namespace WindowsFormApp1
             }
         }
 
-        // private void ExecuteCommand(string command)
-        // {
-        //    throw new NotImplementedException();
-        // }
+     
 
-        public Form1()
-        {
-            InitializeComponent();
-            this.Load += Form1_Load;
-            blackPen = new Pen(Color.Black);
-            pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox1_Paint);
-            button1.Click += new System.EventHandler(this.button1_Click);
-            penPosition = new Point(10, 10); //the initial position of the pen
-            pen = blackPen;// the initial color of the pen
-            textBox1.KeyPress += new KeyPressEventHandler(textBox1_KeyPress);
-            loadToolStripMenuItem = new ToolStripMenuItem("Load");
-            saveToolStripMenuItem = new ToolStripMenuItem("Save");
-            loadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
-            saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
-            menuStrip1 = new MenuStrip();
-            this.MainMenuStrip = menuStrip1;
-            this.Controls.Add(menuStrip1);
-            menuStrip1.Items.Add(loadToolStripMenuItem);
-            menuStrip1.Items.Add(saveToolStripMenuItem);
-            this.Controls.Add(this.pictureBox1);
-            //  graphics = Graphics.FromImage(drawingArea);
-            drawingArea = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            graphics = pictureBox1.CreateGraphics();
-            syntaxChecker = new SyntaxChecker();
-            Syntax.Click += new System.EventHandler(this.Syntax_Click);
-            button1.Click += new System.EventHandler(this.button1_Click);
-        }
+       
         private void Syntax_Click(object sender, EventArgs e)
         {
             try
             {
                 string command = textBox1.Text;
-                syntaxChecker.CheckSyntax(command);
+                helperClass.ValidateSyntax(command);
             }
             catch (ArgumentException ex)
             {
                 MessageBox.Show(ex.Message, "Syntax Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         public class SyntaxChecker
         {
             private HashSet<string> validCommands; //list of valid commands
