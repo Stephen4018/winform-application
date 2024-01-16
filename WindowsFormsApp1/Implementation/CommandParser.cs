@@ -20,6 +20,7 @@ namespace WindowsFormsApp1.Implementation
         {
             //pictureBox1 = new PictureBox();
             pen = new Pen(Color.Black);
+            fillshapes = false;
         }
 
 
