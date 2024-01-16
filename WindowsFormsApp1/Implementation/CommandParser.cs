@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,14 +10,27 @@ namespace WindowsFormsApp1.Implementation
 {
     public class CommandParser :  ICommandParser
     {
+
+        private Graphics graphics;
+        private PictureBox pictureBox1;
+        private Pen pen;
+
+        public CommandParser()
+        {
+            pictureBox1 = new PictureBox();
+            graphics = pictureBox1.CreateGraphics();
+        }
         public void Clear()
         {
-            throw new NotImplementedException();
+            graphics.Clear(Color.Transparent);
         }
 
         public void ColorApply(string color)
         {
-            throw new NotImplementedException();
+            if(Enum.TryParse(color, true, out KnownColor knowncolor))
+            {
+                Pen.Color = Color.FromKnownColor(knowncolor);
+            }
         }
 
         public void DrawCire(int radius)
