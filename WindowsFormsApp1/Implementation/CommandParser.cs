@@ -14,12 +14,17 @@ namespace WindowsFormsApp1.Implementation
         private Graphics graphics;
         private PictureBox pictureBox1;
         private Pen pen;
+        public Pen Pen { get { return pen; } }
 
         public CommandParser()
         {
             pictureBox1 = new PictureBox();
             graphics = pictureBox1.CreateGraphics();
+            pen = new Pen(Color.Black);
         }
+
+
+
         public void Clear()
         {
             graphics.Clear(Color.Transparent);
