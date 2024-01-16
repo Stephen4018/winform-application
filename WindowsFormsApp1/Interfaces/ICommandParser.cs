@@ -21,6 +21,6 @@ namespace WindowsFormsApp1
         void DrawToPosition(int x, int y);
         void ColorApply(string color);
 
-        void FillApply(bool fill);
+        void FillApply(string fill);
     }
 }

@@ -13,7 +13,9 @@ namespace WindowsFormsApp1.Implementation
         private bool fillshapes;
         private Graphics _graphics;
         private Pen pen;
+
         public Pen Pen { get { return pen; } }
+        private Point penPosition;
 
         // constructor
         public CommandParser()
@@ -21,6 +23,7 @@ namespace WindowsFormsApp1.Implementation
             //pictureBox1 = new PictureBox();
             pen = new Pen(Color.Black);
             fillshapes = false;
+            penPosition = new Point(10, 10);
         }
 
 
@@ -47,9 +50,17 @@ namespace WindowsFormsApp1.Implementation
             throw new NotImplementedException();
         }
 
-        public void FillApply(bool toggle)
+        public void FillApply(string toggle)
         {
-            throw new NotImplementedException();
+            if(toggle.ToUpper() == "ON")
+            {
+                fillshapes = true;
+            }
+            else if(toggle.ToUpper() == "OFF")
+            {
+                fillshapes = false;
+
+            }
         }
 
         public void LoadCommandFromFile(string fileName)
