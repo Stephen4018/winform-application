@@ -13,7 +13,7 @@ namespace WindowsFormsApp1
         void SaveCommandToFile(string fileName);
 
         void DrawCire(Graphics graphics, Point center, int radius);
-        void DrawRectangle(Graphics graphics, Rectangle rectangle);
+        void DrawRectangle(Graphics graphics, int width, int height);
         void DrawTriangle(Graphics graphics, Point point1, Point point2, Point point3);
         void Clear(Graphics graphics);
         void Reset();

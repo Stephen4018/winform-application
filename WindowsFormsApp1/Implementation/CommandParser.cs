@@ -75,7 +75,7 @@ namespace WindowsFormsApp1.Implementation
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            penPosition = new Point(10, 10);
         }
 
         public void SaveCommandToFile(string fileName)
@@ -95,15 +95,15 @@ namespace WindowsFormsApp1.Implementation
             }
         }
 
-        public void DrawRectangle(Graphics graphics, Rectangle rectangle)
+        public void DrawRectangle(Graphics graphics, int width, int height)
         {
             if (fillshapes)
             {
-                graphics.FillRectangle(new SolidBrush(pen.Color), 10, 10, rectangle.Width, rectangle.Height );
+                graphics.FillRectangle(new SolidBrush(pen.Color), 10, 10, width, height );
             }
             else
             {
-                graphics.DrawRectangle(pen, 10, 10, rectangle.Width, rectangle.Height);
+                graphics.DrawRectangle(pen, 10, 10, width, height);
             }
         }
 
