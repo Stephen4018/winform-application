@@ -16,10 +16,10 @@ namespace WindowsFormsApp1
             {
                 "moveTo",
                 "drawTo",
-                "Rectangle",
-                "Circle",
+                "rectangle",
+                "circle",
                 "clear",
-                "Triangle",
+                "triangle",
                 "green",
                 "reset",
                 "red",
@@ -32,7 +32,7 @@ namespace WindowsFormsApp1
         public void ValidateSyntax (string command)
         {
             string[] input = command.Split(' ');
-            if (input.Length == 0 || !validCommands.Contains(input[0]))
+            if (input.Length == 0 || !validCommands.Contains(input[0].ToLower()))
             {
                 throw new InvalidCommandException("Please enter a valid command");
             }

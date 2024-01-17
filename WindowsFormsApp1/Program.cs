@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormApp1;
+using WindowsFormsApp1.Implementation;
 
 namespace WindowsFormsApp1
 {
@@ -17,7 +19,15 @@ namespace WindowsFormsApp1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            var serviceProvider = new ServiceCollection()
+                .AddTransient<ICommandParser, CommandParser>()
+                .AddTransient<Form1>()
+                .BuildServiceProvider();
+
+            var form = serviceProvider.GetRequiredService<Form1>();
+
+            Application.Run(form);
         }
     }
 }

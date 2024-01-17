@@ -16,6 +16,7 @@ using System.CodeDom;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using WindowsFormsApp1;
+using WindowsFormsApp1.CustomExceptions;
 
 
 namespace WindowsFormApp1
@@ -37,11 +38,13 @@ namespace WindowsFormApp1
         private ToolStripMenuItem loadToolStripMenuItem;
         private ToolStripMenuItem saveToolStripMenuItem;
         private bool fillShapes;
+
+        private readonly ICommandParser commandParser;
         //private Graphics graphics;
         //private bool errorDisplayed;
 
         // Constructor
-        public Form1()
+        public Form1(ICommandParser commandParser)
         {
             InitializeComponent();
             this.Load += Form1_Load;
@@ -67,6 +70,7 @@ namespace WindowsFormApp1
             helperClass = new HelperClass();
             Syntax.Click += new System.EventHandler(this.Syntax_Click);
             button1.Click += new System.EventHandler(this.button1_Click);
+            this.commandParser = commandParser;
         }
 
         private void LoadFromFile(string fileName)
@@ -137,116 +141,24 @@ namespace WindowsFormApp1
 
 
 
-        public void ExecuteCommand(string command)
+        public void ExecuteCommand()
         {
-            try
-            {
-                helperClass.ValidateSyntax(command);
-                string[] input = command.Split(' ');
-                //buttonClickAction?.Invoke();
-            }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show(ex.Message, "Syntax Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
-            }
-        }
+            //try
+            //{
+            //    helperClass.ValidateSyntax(command);
+            //    string[] input = command.Split(' ');
+            //    //buttonClickAction?.Invoke();
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Syntax Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                string command = textBox1.Text;
-                ExecuteCommand(command);
-                button1.PerformClick();
-                e.Handled = true;
-            }
-        }
+            //}
 
-     
-
-       
-        private void Syntax_Click(object sender, EventArgs e)
-        {
             try
             {
                 string command = textBox1.Text;
                 helperClass.ValidateSyntax(command);
-            }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show(ex.Message, "Syntax Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        public class SyntaxChecker
-        {
-            private HashSet<string> validCommands; //list of valid commands
-            public SyntaxChecker()
-            {
-                validCommands = new HashSet<string>
-            {
-                "moveTo",
-                "drawTo",
-                "Rectangle",
-                "Circle",
-                "clear",
-                "Triangle",
-                "green",
-                "reset",
-                "red",
-                "blue",
-                "fill"
-            };
-            }
-            public void CheckSyntax(string command)
-            {
-                string[] input = command.Split(' ');
-                if (input.Length == 0)
-                {
-                    throw new ArgumentException("Empty command. Please enter a valid command.");
-                }
-                if (!validCommands.Contains(input[0]))
-                {
-                    throw new ArgumentException("Invalid command. Please enter a valid command.");
-                }
-                switch (input[0])
-                {
-                    case "drawTo":
-                        if (input.Length != 3 || !int.TryParse(input[1], out _) || !int.TryParse(input[2], out _))
-                        {
-                            throw new ArgumentException("Invalid syntax for drawTo command.");
-                        }
-                        break;
-
-                    case "moveTo":
-                        if (input.Length != 3 || !int.TryParse(input[1], out _) || !int.TryParse(input[2], out _))
-                        {
-                            throw new ArgumentException("Invalid syntax for moveTo command.");
-                        }
-                        break;
-                }
-            }
-        }
-
-
-        private void PictureBox1_Paint(object sender, PaintEventArgs e)
-        {
-            //A small square at the top left corder of the picturebox
-            e.Graphics.FillRectangle(Brushes.Black, penPosition.X, penPosition.Y, 5, 5);
-        }
-        //private bool fillShapes = false;
-        private Graphics graphics;
-
-        private bool errorDisplayed = false;
-        private EventHandler Form1_Load;
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string command = textBox1.Text;
-                syntaxChecker.CheckSyntax(command);
                 if (pictureBox1.Image == null)
                 {
                     pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
@@ -255,16 +167,18 @@ namespace WindowsFormApp1
                 graphics = Graphics.FromImage(pictureBox1.Image);
 
                 string[] input = textBox1.Text.Split(' ');
-                if (input[0] == "Circle" && input.Length == 2 && int.TryParse(input[1], out int radius))
+                //commandParser.Clear(graphics);
+                if (input[0].ToLower() == "circle" && input.Length == 2 && int.TryParse(input[1], out int radius))
                 {
-                    if (fillShapes)
-                    {
-                        graphics.FillEllipse(pen.Brush, 10, 10, radius * 2, radius * 2);
-                    }
-                    else
-                    {
-                        graphics.DrawEllipse(pen, 10, 10, radius * 2, radius * 2);
-                    }
+                    //if (fillShapes)
+                    //{
+                    //    graphics.FillEllipse(pen.Brush, 10, 10, radius * 2, radius * 2);
+                    //}
+                    //else
+                    //{
+                    //    graphics.DrawEllipse(pen, 10, 10, radius * 2, radius * 2);
+                    //}
+                    commandParser.DrawCire(graphics,penPosition, radius);
                 }
                 else if (input[0] == "Rectangle" && input.Length == 3 && int.TryParse(input[1], out int width) && int.TryParse(input[2], out int height))
                 {
@@ -348,7 +262,7 @@ namespace WindowsFormApp1
                 errorDisplayed = false;
             }
 
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
                 if (!errorDisplayed)
                 {
@@ -356,6 +270,214 @@ namespace WindowsFormApp1
                     errorDisplayed = true;
                 }
             }
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                string command = textBox1.Text;
+                ExecuteCommand();
+                //button1.PerformClick();
+                e.Handled = true;
+                
+            }
+        }
+
+     
+
+       
+        private void Syntax_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string command = textBox1.Text;
+                helperClass.ValidateSyntax(command);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Syntax Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //public class SyntaxChecker
+        //{
+        //    private HashSet<string> validCommands; //list of valid commands
+        //    public SyntaxChecker()
+        //    {
+        //        validCommands = new HashSet<string>
+        //    {
+        //        "moveTo",
+        //        "drawTo",
+        //        "Rectangle",
+        //        "Circle",
+        //        "clear",
+        //        "Triangle",
+        //        "green",
+        //        "reset",
+        //        "red",
+        //        "blue",
+        //        "fill"
+        //    };
+        //    }
+        //    public void CheckSyntax(string command)
+        //    {
+        //        string[] input = command.Split(' ');
+        //        if (input.Length == 0)
+        //        {
+        //            throw new ArgumentException("Empty command. Please enter a valid command.");
+        //        }
+        //        if (!validCommands.Contains(input[0]))
+        //        {
+        //            throw new ArgumentException("Invalid command. Please enter a valid command.");
+        //        }
+        //        switch (input[0])
+        //        {
+        //            case "drawTo":
+        //                if (input.Length != 3 || !int.TryParse(input[1], out _) || !int.TryParse(input[2], out _))
+        //                {
+        //                    throw new ArgumentException("Invalid syntax for drawTo command.");
+        //                }
+        //                break;
+
+        //            case "moveTo":
+        //                if (input.Length != 3 || !int.TryParse(input[1], out _) || !int.TryParse(input[2], out _))
+        //                {
+        //                    throw new ArgumentException("Invalid syntax for moveTo command.");
+        //                }
+        //                break;
+        //        }
+        //    }
+        //}
+
+
+        private void PictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            //A small square at the top left corder of the picturebox
+            e.Graphics.FillRectangle(Brushes.Black, penPosition.X, penPosition.Y, 5, 5);
+        }
+        //private bool fillShapes = false;
+        private Graphics graphics;
+
+        private bool errorDisplayed = false;
+        private EventHandler Form1_Load;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ExecuteCommand();
+            //try
+            //{
+            //    string command = textBox1.Text;
+            //    helperClass.ValidateSyntax(command);
+            //    if (pictureBox1.Image == null)
+            //    {
+            //        pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            //    }
+
+            //    graphics = Graphics.FromImage(pictureBox1.Image);
+
+            //    string[] input = textBox1.Text.Split(' ');
+            //    if (input[0] == "Circle" && input.Length == 2 && int.TryParse(input[1], out int radius))
+            //    {
+            //        if (fillShapes)
+            //        {
+            //            graphics.FillEllipse(pen.Brush, 10, 10, radius * 2, radius * 2);
+            //        }
+            //        else
+            //        {
+            //            graphics.DrawEllipse(pen, 10, 10, radius * 2, radius * 2);
+            //        }
+            //    }
+            //    else if (input[0] == "Rectangle" && input.Length == 3 && int.TryParse(input[1], out int width) && int.TryParse(input[2], out int height))
+            //    {
+            //        if (fillShapes)
+            //        {
+            //            graphics.FillRectangle(pen.Brush, 10, 10, width, height);
+
+            //        }
+            //        else
+            //        {
+            //            graphics.DrawRectangle(pen, 10, 10, width, height);
+            //        }
+            //    }
+
+            //    else if (input[0] == "Triangle" && input.Length == 3 && int.TryParse(input[1], out int side1) && int.TryParse(input[2], out int side2))
+            //    {
+            //        if (fillShapes)
+            //        {
+            //            Point point1 = new Point(10, 10 + side2);
+            //            Point point2 = new Point(10 + side1, 10 + side2);
+            //            Point point3 = new Point(10 + side1 / 2, 10);
+
+            //            Point[] trianglePoints = { point1, point2, point3 };
+
+            //            graphics.FillPolygon(pen.Brush, trianglePoints);
+            //        }
+            //        else
+            //        {
+            //            Point point1 = new Point(10, 10 + side2);
+            //            Point point2 = new Point(10 + side1, 10 + side2);
+            //            Point point3 = new Point(10 + side1 / 2, 10);
+
+            //            Point[] trianglePoints = { point1, point2, point3 };
+
+            //            graphics.DrawPolygon(pen, trianglePoints);
+            //        }
+            //    }
+            //    else if (input[0] == "clear")
+            //    {
+            //        //Clear the graphics area
+            //        graphics.Clear(Color.Transparent);
+            //    }
+            //    else if (input[0] == "reset")
+            //    {
+            //        penPosition = new Point(10, 10);
+            //    }
+            //    else if (input[0].StartsWith("moveTo") && input.Length == 3 && int.TryParse(input[1], out int x) && int.TryParse(input[2], out int y))
+            //    {
+            //        penPosition = new Point(x, y);
+            //    }
+            //    else if (input[0].StartsWith("drawTo") && input.Length == 3 && int.TryParse(input[1], out int x2) && int.TryParse(input[2], out int y2))
+            //    {
+            //        Point endPoint = new Point(x2, y2);
+            //        graphics.DrawLine(pen, penPosition, endPoint);
+            //        penPosition = endPoint; // update the pen position
+            //    }
+            //    else if (input[0] == "red")
+            //    {
+            //        pen.Color = Color.Red;
+            //    }
+            //    else if (input[0] == "green")
+            //    {
+            //        pen.Color = Color.Green;
+            //    }
+            //    else if (input[0] == "blue")
+            //    {
+            //        pen.Color = Color.Blue;
+            //    }
+            //    else if (input[0] == "fill" && input.Length == 2)
+            //    {
+            //        if (input[1] == "on")
+            //        {
+            //            fillShapes = true;
+            //        }
+            //        else if (input[1] == "off")
+            //        {
+            //            fillShapes = false;
+            //        }
+            //    }
+            //    pictureBox1.Refresh();
+            //    errorDisplayed = false;
+            //}
+
+            //catch (Exception ex)
+            //{
+            //    if (!errorDisplayed)
+            //    {
+            //        MessageBox.Show(ex.Message, "Syntax Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        errorDisplayed = true;
+            //    }
+            //}
 
         }
         private void richTextBox1_TextChanged(object sender, EventArgs e)

@@ -87,11 +87,11 @@ namespace WindowsFormsApp1.Implementation
         {
             if(fillshapes)
             {
-                graphics.FillEllipse(new SolidBrush(pen.Color), center.X - radius, center.Y - radius, 2 * radius, 2 * radius);
+                graphics.FillEllipse(new SolidBrush(pen.Color), center.X, center.Y, 2 * radius, 2 * radius);
             }
             else
             {
-                graphics.DrawEllipse(pen, center.X - radius, center.Y - radius, 2 * radius, 2 * radius);
+                graphics.DrawEllipse(pen, center.X, center.Y, 2 * radius, 2 * radius);
             }
         }
 
