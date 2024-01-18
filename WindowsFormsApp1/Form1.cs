@@ -189,7 +189,7 @@ namespace WindowsFormApp1
                 }
                 else if (input[0] == "reset")
                 {
-                    penPosition = new Point(10, 10);
+                    commandParser.Reset();
                 }
                 else if (input[0].StartsWith("moveTo") && input.Length == 3 && int.TryParse(input[1], out int x) && int.TryParse(input[2], out int y))
                 {
