@@ -75,47 +75,6 @@ namespace WindowsFormApp1
             this.commandParser = commandParser;
         }
 
-        private void LoadFromFile(string fileName)
-        {
-            if (File.Exists(fileName))
-            {
-                using (StreamReader sr = new StreamReader(fileName))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        string[] parts = line.Split(' ');
-                        if (parts[0] == "penPosition" && parts.Length == 3 &&
-                            int.TryParse(parts[1], out int x) && int.TryParse(parts[2], out int y))
-                        {
-                            penPosition = new Point(x, y);
-                        }
-                        else if (parts[0] == "penColor" && parts.Length == 2)
-                        {
-                            pen.Color = Color.FromName(parts[1]);
-                        }
-                        else if (parts[0] == "FillShapes" && parts.Length == 2 && bool.TryParse(parts[1], out bool fill))
-                        {
-                            fillShapes = fill;
-                        }
-                    }
-                }
-
-            }
-
-
-        }
-        private void SaveToFile(string fileName)
-        {
-            using (StreamWriter sw = new StreamWriter(fileName))
-            {
-                //save current state of program
-                sw.WriteLine($"PenPosition {penPosition.X} {penPosition.Y}");
-                sw.WriteLine($"PenColor {pen.Color.Name}");
-                sw.WriteLine($"FillShapes {fillShapes}");
-            }
-        }
-
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -124,7 +83,7 @@ namespace WindowsFormApp1
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                LoadFromFile(openFileDialog.FileName);
+                commandParser.LoadCommandFromFile(openFileDialog.FileName);
                 // Refresh the PictureBox
                 pictureBox1.Refresh();
             }
@@ -137,11 +96,9 @@ namespace WindowsFormApp1
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                SaveToFile(saveFileDialog.FileName);
+                commandParser.SaveCommandToFile(saveFileDialog.FileName);
             }
         }
-
-
 
         public void ExecuteCommand()
         {
@@ -204,14 +161,7 @@ namespace WindowsFormApp1
                 }
                 else if (input[0] == "fill" && input.Length == 2)
                 {
-                    if (input[1] == "on")
-                    {
-                        fillShapes = true;
-                    }
-                    else if (input[1] == "off")
-                    {
-                        fillShapes = false;
-                    }
+                    commandParser.ColorApply(input[1]);
                 }
                 pictureBox1.Refresh();
                 errorDisplayed = false;
@@ -239,9 +189,6 @@ namespace WindowsFormApp1
             }
         }
 
-     
-
-       
         private void Syntax_Click(object sender, EventArgs e)
         {
             try

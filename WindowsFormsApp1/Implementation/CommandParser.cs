@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,7 +69,30 @@ namespace WindowsFormsApp1.Implementation
 
         public void LoadCommandFromFile(string fileName)
         {
-            throw new NotImplementedException();
+            if (File.Exists(fileName))
+            {
+                using (StreamReader sr = new StreamReader(fileName))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(' ');
+                        if (parts[0] == "penPosition" && parts.Length == 3 &&
+                            int.TryParse(parts[1], out int x) && int.TryParse(parts[2], out int y))
+                        {
+                            penPosition = new Point(x, y);
+                        }
+                        else if (parts[0] == "penColor" && parts.Length == 2)
+                        {
+                            pen.Color = Color.FromName(parts[1]);
+                        }
+                        else if (parts[0] == "FillShapes" && parts.Length == 2 && bool.TryParse(parts[1], out bool fill))
+                        {
+                            fillshapes = fill;
+                        }
+                    }
+                }
+            }
         }
 
         public void MoveToPosition(int x, int y)
@@ -83,7 +107,12 @@ namespace WindowsFormsApp1.Implementation
 
         public void SaveCommandToFile(string fileName)
         {
-            throw new NotImplementedException();
+            using(StreamWriter sw = new StreamWriter(fileName))
+            {
+                sw.WriteLine($"PenPosition {penPosition.X} {penPosition.Y}");
+                sw.WriteLine($"PenColor {pen.Color.Name}");
+                sw.WriteLine($"Fillshapes {fillshapes}");
+            }
         }
 
         public void DrawCire(Graphics graphics, Point center, int radius)
