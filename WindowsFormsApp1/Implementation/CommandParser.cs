@@ -35,7 +35,8 @@ namespace WindowsFormsApp1.Implementation
 
         public void ColorApply(string color)
         {
-            if(Enum.TryParse(color, true, out KnownColor knowncolor))
+            string convert = color.ToLower();
+            if(Enum.TryParse(convert, true, out KnownColor knowncolor))
             {
                 Pen.Color = Color.FromKnownColor(knowncolor);
             }
@@ -45,9 +46,11 @@ namespace WindowsFormsApp1.Implementation
             }
         }
 
-        public void DrawToPosition(int x, int y)
+        public void DrawToPosition(Graphics graphics, int x, int y)
         {
-            throw new NotImplementedException();
+            Point point = new Point(x, y);
+            graphics.DrawLine(pen, penPosition, point);
+            penPosition = point;
         }
 
         public void FillApply(string toggle)
@@ -70,7 +73,7 @@ namespace WindowsFormsApp1.Implementation
 
         public void MoveToPosition(int x, int y)
         {
-            throw new NotImplementedException();
+            penPosition = new Point(x, y); 
         }
 
         public void Reset()

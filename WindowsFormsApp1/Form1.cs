@@ -157,7 +157,7 @@ namespace WindowsFormApp1
 
                 graphics = Graphics.FromImage(pictureBox1.Image);
 
-                string[] input = textBox1.Text.Split(' ');
+                string[] input = textBox1.Text.ToLower().Split(' ');
 
                 // This clears the picture box before drawing any shape
                 commandParser.Clear(graphics);
@@ -185,7 +185,6 @@ namespace WindowsFormApp1
                 {
                     //Clear the graphics area
                     commandParser.Clear(graphics);
-
                 }
                 else if (input[0] == "reset")
                 {
@@ -193,25 +192,15 @@ namespace WindowsFormApp1
                 }
                 else if (input[0].StartsWith("moveTo") && input.Length == 3 && int.TryParse(input[1], out int x) && int.TryParse(input[2], out int y))
                 {
-                    penPosition = new Point(x, y);
+                    commandParser.MoveToPosition(x, y);
                 }
                 else if (input[0].StartsWith("drawTo") && input.Length == 3 && int.TryParse(input[1], out int x2) && int.TryParse(input[2], out int y2))
                 {
-                    Point endPoint = new Point(x2, y2);
-                    graphics.DrawLine(pen, penPosition, endPoint);
-                    penPosition = endPoint; // update the pen position
+                    commandParser.DrawToPosition(graphics, x2, y2);
                 }
-                else if (input[0] == "red")
+                else if (input[0].ToLower() == "red" || input[0] == "green" || input[0] == "blue")
                 {
-                    pen.Color = Color.Red;
-                }
-                else if (input[0] == "green")
-                {
-                    pen.Color = Color.Green;
-                }
-                else if (input[0] == "blue")
-                {
-                    pen.Color = Color.Blue;
+                    commandParser.ColorApply(input[0].ToLower());
                 }
                 else if (input[0] == "fill" && input.Length == 2)
                 {

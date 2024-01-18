@@ -18,7 +18,7 @@ namespace WindowsFormsApp1
         void Clear(Graphics graphics);
         void Reset();
         void MoveToPosition(int x, int y);
-        void DrawToPosition(int x, int y);
+        void DrawToPosition(Graphics graphics, int x, int y);
         void ColorApply(string color);
 
         void FillApply(string fill);
