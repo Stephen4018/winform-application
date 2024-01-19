@@ -14,8 +14,8 @@ namespace WindowsFormsApp1
         {
             validCommands = new List<string>
             {
-                "moveTo",
-                "drawTo",
+                "moveto",
+                "drawto",
                 "rectangle",
                 "circle",
                 "clear",

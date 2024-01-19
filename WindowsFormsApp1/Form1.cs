@@ -147,11 +147,11 @@ namespace WindowsFormApp1
                 {
                     commandParser.Reset();
                 }
-                else if (input[0].StartsWith("moveTo") && input.Length == 3 && int.TryParse(input[1], out int x) && int.TryParse(input[2], out int y))
+                else if (input[0].ToLower().StartsWith("moveto") && input.Length == 3 && int.TryParse(input[1], out int x) && int.TryParse(input[2], out int y))
                 {
                     commandParser.MoveToPosition(x, y);
                 }
-                else if (input[0].StartsWith("drawTo") && input.Length == 3 && int.TryParse(input[1], out int x2) && int.TryParse(input[2], out int y2))
+                else if (input[0].ToLower().StartsWith("drawto") && input.Length == 3 && int.TryParse(input[1], out int x2) && int.TryParse(input[2], out int y2))
                 {
                     commandParser.DrawToPosition(graphics, x2, y2);
                 }
