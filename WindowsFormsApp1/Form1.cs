@@ -169,11 +169,8 @@ namespace WindowsFormApp1
 
             catch (Exception ex)
             {
-                if (!errorDisplayed)
-                {
                     MessageBox.Show(ex.Message, "Syntax Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     errorDisplayed = true;
-                }
             }
         }
 

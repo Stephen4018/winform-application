@@ -150,7 +150,7 @@ namespace WindowsFormsApp1.Implementation
                 graphics.DrawPolygon(pen, new Point[] { point1, point2, point3 });
             }
         }
-
+        //
     
     }
 }
